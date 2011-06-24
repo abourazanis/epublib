@@ -3,9 +3,12 @@ package nl.siegmann.epublib.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -68,6 +71,19 @@ public class ResourceUtil {
 		return new Resource(zipInputStream, zipEntry.getName());
 
 	}
+	
+	/**
+	 * Creates a resource out of the given zipEntry and InputStream.
+	 * 
+	 * @param zipEntry
+	 * @param InputStream
+	 * @return
+	 * @throws IOException
+	 */
+	public static Resource createResource(ZipEntry zipEntry, InputStream inputStream) throws IOException {
+		return new Resource(inputStream, zipEntry.getName());
+
+	}
 		
 	
 	/**
@@ -115,4 +131,14 @@ public class ResourceUtil {
 		result.setXmlStandalone(true);
 		return result;
 	}
+	
+	public static Resource getResourceFromEpub(String epubFilePath,
+			String resourceHref) throws IOException,ZipException {
+		
+			ZipFile file = new ZipFile(epubFilePath);
+			ZipEntry zipEntry = file.getEntry(resourceHref);
+			InputStream inp = file.getInputStream(zipEntry);
+			return createResource(zipEntry, inp);
+
+			}
 }

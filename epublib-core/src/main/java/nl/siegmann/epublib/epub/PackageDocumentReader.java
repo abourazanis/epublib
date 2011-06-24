@@ -19,6 +19,7 @@ import nl.siegmann.epublib.domain.Book;
 import nl.siegmann.epublib.domain.Guide;
 import nl.siegmann.epublib.domain.GuideReference;
 import nl.siegmann.epublib.domain.MediaType;
+import nl.siegmann.epublib.domain.Metadata;
 import nl.siegmann.epublib.domain.Resource;
 import nl.siegmann.epublib.domain.Resources;
 import nl.siegmann.epublib.domain.Spine;
@@ -66,6 +67,22 @@ public class PackageDocumentReader extends PackageDocumentBase {
 			book.setCoverPage(book.getSpine().getResource(0));
 		}
 	}
+	
+	public static void readMetaData(Resource packageResource, EpubReader epubReader, Book book, Map<String, Resource> resourcesByHref) throws UnsupportedEncodingException, SAXException, IOException, ParserConfigurationException {
+		Document packageDocument = ResourceUtil.getAsDocument(packageResource);
+		String packageHref = packageResource.getHref();
+		resourcesByHref = fixHrefs(packageHref, resourcesByHref);
+		
+		// Books sometimes use non-identifier ids. We map these here to legal ones
+		Map<String, String> idMapping = new HashMap<String, String>();
+		
+		Resources resources = readManifest(packageDocument, packageHref, epubReader, resourcesByHref, idMapping);
+		book.setResources(resources);
+		readCover(packageDocument, book);
+		book.setMetadata(PackageDocumentMetadataReader.readMetadata(packageDocument, book.getResources()));
+	}
+	
+	
 	
 	/**
 	 * Reads the manifest containing the resource ids, hrefs and mediatypes.

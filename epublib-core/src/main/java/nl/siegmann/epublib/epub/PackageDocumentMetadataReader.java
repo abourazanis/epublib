@@ -30,7 +30,7 @@ class PackageDocumentMetadataReader extends PackageDocumentBase {
 
 	private static final Logger log = LoggerFactory.getLogger(PackageDocumentMetadataReader.class);
 
-	public static Metadata readMetadata(Document packageDocument, Resources resources) {
+	public static Metadata readMetadata(Document packageDocument,Resources resources) {
 		Metadata result = new Metadata();
 		Element metadataElement = DOMUtil.getFirstElementByTagNameNS(packageDocument.getDocumentElement(), NAMESPACE_OPF, OPFTags.metadata);
 		if(metadataElement == null) {
