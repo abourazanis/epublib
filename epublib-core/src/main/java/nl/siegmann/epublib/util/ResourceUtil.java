@@ -30,23 +30,23 @@ import org.xml.sax.SAXException;
  * Various resource utility methods
  * 
  * @author paul
- *
+ * 
  */
 public class ResourceUtil {
-	
+
 	private static Logger log = LoggerFactory.getLogger(ResourceUtil.class);
 
 	public static Resource createResource(File file) throws IOException {
 		if (file == null) {
 			return null;
 		}
-		MediaType mediaType = MediatypeService.determineMediaType(file.getName());
+		MediaType mediaType = MediatypeService.determineMediaType(file
+				.getName());
 		byte[] data = IOUtil.toByteArray(new FileInputStream(file));
 		Resource result = new Resource(data, mediaType);
 		return result;
 	}
-	
-	
+
 	/**
 	 * Creates a resource with as contents a html page with the given title.
 	 * 
@@ -55,8 +55,10 @@ public class ResourceUtil {
 	 * @return
 	 */
 	public static Resource createResource(String title, String href) {
-		String content = "<html><head><title>" + title + "</title></head><body><h1>" + title + "</h1></body></html>";
-		return new Resource(null, content.getBytes(), href, MediatypeService.XHTML, Constants.ENCODING);
+		String content = "<html><head><title>" + title
+				+ "</title></head><body><h1>" + title + "</h1></body></html>";
+		return new Resource(null, content.getBytes(), href,
+				MediatypeService.XHTML, Constants.ENCODING);
 	}
 
 	/**
@@ -67,11 +69,12 @@ public class ResourceUtil {
 	 * @return
 	 * @throws IOException
 	 */
-	public static Resource createResource(ZipEntry zipEntry, ZipInputStream zipInputStream) throws IOException {
+	public static Resource createResource(ZipEntry zipEntry,
+			ZipInputStream zipInputStream) throws IOException {
 		return new Resource(zipInputStream, zipEntry.getName());
 
 	}
-	
+
 	/**
 	 * Creates a resource out of the given zipEntry and InputStream.
 	 * 
@@ -80,17 +83,19 @@ public class ResourceUtil {
 	 * @return
 	 * @throws IOException
 	 */
-	public static Resource createResource(ZipEntry zipEntry, InputStream inputStream) throws IOException {
+	public static Resource createResource(ZipEntry zipEntry,
+			InputStream inputStream) throws IOException {
 		return new Resource(inputStream, zipEntry.getName());
 
 	}
-		
-	
+
 	/**
-	 * Gets the contents of the Resource as an InputSource in a null-safe manner.
+	 * Gets the contents of the Resource as an InputSource in a null-safe
+	 * manner.
 	 * 
 	 */
-	public static InputSource getInputSource(Resource resource) throws IOException {
+	public static InputSource getInputSource(Resource resource)
+			throws IOException {
 		if (resource == null) {
 			return null;
 		}
@@ -101,18 +106,20 @@ public class ResourceUtil {
 		InputSource inputSource = new InputSource(reader);
 		return inputSource;
 	}
-	
-	
+
 	/**
 	 * Reads parses the xml therein and returns the result as a Document
 	 */
-	public static Document getAsDocument(Resource resource) throws UnsupportedEncodingException, SAXException, IOException, ParserConfigurationException {
-		return getAsDocument(resource, EpubProcessorSupport.createDocumentBuilder());
+	public static Document getAsDocument(Resource resource)
+			throws UnsupportedEncodingException, SAXException, IOException,
+			ParserConfigurationException {
+		return getAsDocument(resource,
+				EpubProcessorSupport.createDocumentBuilder());
 	}
-	
-	
+
 	/**
-	 * Reads the given resources inputstream, parses the xml therein and returns the result as a Document
+	 * Reads the given resources inputstream, parses the xml therein and returns
+	 * the result as a Document
 	 * 
 	 * @param resource
 	 * @param documentBuilderFactory
@@ -122,7 +129,10 @@ public class ResourceUtil {
 	 * @throws IOException
 	 * @throws ParserConfigurationException
 	 */
-	public static Document getAsDocument(Resource resource, DocumentBuilder documentBuilder) throws UnsupportedEncodingException, SAXException, IOException, ParserConfigurationException {
+	public static Document getAsDocument(Resource resource,
+			DocumentBuilder documentBuilder)
+			throws UnsupportedEncodingException, SAXException, IOException,
+			ParserConfigurationException {
 		InputSource inputSource = getInputSource(resource);
 		if (inputSource == null) {
 			return null;
@@ -131,14 +141,18 @@ public class ResourceUtil {
 		result.setXmlStandalone(true);
 		return result;
 	}
-	
+
 	public static Resource getResourceFromEpub(String epubFilePath,
-			String resourceHref) throws IOException,ZipException {
-		
-			ZipFile file = new ZipFile(epubFilePath);
-			ZipEntry zipEntry = file.getEntry(resourceHref);
+			String resourceHref) throws IOException, ZipException {
+
+		ZipFile file = new ZipFile(epubFilePath);
+		ZipEntry zipEntry = file.getEntry(resourceHref);
+		if (zipEntry != null) {
 			InputStream inp = file.getInputStream(zipEntry);
 			return createResource(zipEntry, inp);
+		} else {
+			return null;
+		}
 
-			}
+	}
 }

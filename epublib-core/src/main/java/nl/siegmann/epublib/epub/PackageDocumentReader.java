@@ -219,7 +219,7 @@ public class PackageDocumentReader extends PackageDocumentBase {
 			return generateSpineFromResources(resources);
 		}
 		Spine result = new Spine();
-		result.setTocResource(findTableOfContentsResource(spineElement, resources));
+		result.setTocResource(findTableOfContentsResource(spineElement, resources));//TODO:maybe we need decrypt here.
 		NodeList spineNodes = packageDocument.getElementsByTagNameNS(NAMESPACE_OPF, OPFTags.itemref);
 		List<SpineReference> spineReferences = new ArrayList<SpineReference>(spineNodes.getLength());
 		for(int i = 0; i < spineNodes.getLength(); i++) {

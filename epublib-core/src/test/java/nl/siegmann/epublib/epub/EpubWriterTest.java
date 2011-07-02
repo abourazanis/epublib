@@ -54,6 +54,9 @@ public class EpubWriterTest extends TestCase {
 		} catch (FactoryConfigurationError e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
