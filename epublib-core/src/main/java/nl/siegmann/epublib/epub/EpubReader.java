@@ -38,7 +38,7 @@ public class EpubReader {
 	private static final Logger log = LoggerFactory.getLogger(EpubReader.class);
 	private BookProcessor bookProcessor = BookProcessor.IDENTITY_BOOKPROCESSOR;
 	
-	private DecryptService decrypter;
+	public DecryptService decrypter;
 	
 	public EpubReader(){
 	}
@@ -150,7 +150,6 @@ public class EpubReader {
 		Map<String, Resource> result = new HashMap<String, Resource>();
 		for (ZipEntry zipEntry = in.getNextEntry(); zipEntry != null; zipEntry = in
 				.getNextEntry()) {
-			// System.out.println(zipEntry.getName());
 			if (zipEntry.isDirectory()) {
 				continue;
 			}
